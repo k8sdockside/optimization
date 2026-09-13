@@ -1,0 +1,4 @@
+# LF everywhere, so the committed ui/ is byte-for-byte what `npm run build`
+# writes on any platform, and `npm run check` agrees with CI.
+* text=auto eol=lf
+ui/** text eol=lf

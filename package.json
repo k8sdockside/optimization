@@ -1,0 +1,28 @@
+{
+    "name": "k8sdockside-optimization",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Optimization advisor: a K8s Dockside plugin that checks a cluster for resource, reliability, scaling and waste problems, scores it, and says what to change.",
+    "license": "Apache-2.0",
+    "author": "Roger Westerbo",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/rogerwesterbo/k8sdockside-optimization"
+    },
+    "type": "module",
+    "engines": {
+        "node": ">=20"
+    },
+    "scripts": {
+        "build": "node scripts/build.mjs",
+        "watch": "node scripts/build.mjs --watch",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "check": "npm run typecheck && npm run test && node scripts/build.mjs --check"
+    },
+    "devDependencies": {
+        "esbuild": "0.28.2",
+        "typescript": "^6.0.3",
+        "vitest": "^4.1.11"
+    }
+}

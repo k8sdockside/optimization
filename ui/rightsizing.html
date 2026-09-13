@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Rightsizing</title>
+        <link rel="stylesheet" href="optimization.css" />
+        <!-- The bridge to the app. Served by K8s Dockside itself, always at this path. -->
+        <script src="/plugin-ui/_sdk/k8sdockside.js"></script>
+    </head>
+    <body class="page">
+        <p id="error" class="banner error" role="alert" hidden></p>
+
+        <header class="view-head">
+            <h1>Rightsizing</h1>
+            <p class="faint">What every container asks for, what it uses, and what it should ask for: the 95th percentile of CPU and the peak of memory, plus 30% headroom.</p>
+        </header>
+
+        <section id="source"></section>
+
+        <section id="toolbar" class="controls" hidden></section>
+
+        <section id="table" class="table-wrap">
+            <div class="loading">
+                <span class="pulse"></span>
+                <span>Reading requests and usage…</span>
+            </div>
+        </section>
+
+        <!-- Built from src/pages/rightsizing.ts. -->
+        <script src="rightsizing.js"></script>
+    </body>
+</html>

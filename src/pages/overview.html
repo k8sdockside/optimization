@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Optimization advisor</title>
+        <link rel="stylesheet" href="optimization.css" />
+        <!-- The bridge to the app. Served by K8s Dockside itself, always at this path. -->
+        <script src="/plugin-ui/_sdk/k8sdockside.js"></script>
+    </head>
+    <body class="page">
+        <p id="error" class="banner error" role="alert" hidden></p>
+
+        <!-- The score, and a score per category. -->
+        <section id="hero" class="hero">
+            <div class="loading">
+                <span class="pulse"></span>
+                <span>Checking this cluster…</span>
+            </div>
+        </section>
+
+        <!-- Where usage comes from: a tip when it is not Prometheus or VictoriaMetrics. -->
+        <section id="source" hidden></section>
+
+        <section id="controls" class="controls" hidden></section>
+
+        <!-- Every rule, by category, as a checklist. -->
+        <section id="rules" class="rules" hidden></section>
+
+        <footer id="foot" class="foot" hidden></footer>
+
+        <!-- A classic script, not type="module": a sandboxed frame has an
+             opaque origin, so a module would be a cross-origin load.
+             Built from src/pages/overview.ts. -->
+        <script src="overview.js"></script>
+    </body>
+</html>

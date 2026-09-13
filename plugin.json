@@ -1,0 +1,64 @@
+{
+    "$schema": "https://raw.githubusercontent.com/rogerwesterbo/k8sdockside/main/docs/plugin.schema.json",
+    "id": "optimization",
+    "name": "Optimization advisor",
+    "version": "1.0.0",
+    "minAppVersion": "0.0.17",
+    "tagline": "a score for this cluster, and what to change to raise it",
+    "icon": "sliders",
+    "author": "Roger Westerbo",
+    "docs": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+    "links": [
+        { "label": "Resource management", "url": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/" },
+        { "label": "Disruption budgets", "url": "https://kubernetes.io/docs/concepts/workloads/pods/disruptions/" },
+        { "label": "Source", "url": "https://github.com/rogerwesterbo/k8sdockside-optimization" }
+    ],
+    "description": "Checks the cluster against a set of plain rules — requests and limits, replicas and disruption budgets, probes, autoscalers, idle volumes and services, node headroom — and gives it a score from 0 to 100. No AI and no guesswork: every tip names the objects it is about, why it matters and what to change.\n\nStart with the Overview: the score and a score per category, then every rule as a checklist. Switch off the rules that do not apply to you and accept the findings you have decided to live with; the score follows. Save your choices to the cluster (a ConfigMap in the default namespace) so they are there next time and for everyone else. An object can also opt out with the annotation optimization.k8sdockside.io/ignore.\n\nRightsizing compares what every container asks for with what it uses. It is best with Prometheus or VictoriaMetrics (a day of usage), works with metrics-server (one reading, right now), and says so when there is neither. Changes are always shown to you before they are made.",
+    "requires": [
+        { "kind": "pods", "label": "Pods" },
+        { "kind": "deployments", "label": "Deployments" },
+        { "kind": "crd:pods.metrics.k8s.io", "label": "metrics-server (pod usage)", "optional": true },
+        { "kind": "crd:nodes.metrics.k8s.io", "label": "metrics-server (node usage)", "optional": true }
+    ],
+    "ui": {
+        "kinds": [
+            "statefulsets",
+            "daemonsets",
+            "jobs",
+            "cronjobs",
+            "nodes",
+            "namespaces",
+            "services",
+            "horizontalpodautoscalers",
+            "poddisruptionbudgets",
+            "persistentvolumeclaims",
+            "persistentvolumes",
+            "limitranges",
+            "resourcequotas",
+            "configmaps"
+        ],
+        "write": true
+    },
+    "overview": { "entry": "overview.html" },
+    "views": [{ "id": "rightsizing", "label": "Rightsizing", "icon": "scale", "type": "custom", "entry": "rightsizing.html" }],
+    "charts": [
+        {
+            "id": "usage-cpu-p95",
+            "label": "CPU used per container (95th percentile over a day)",
+            "attach": "overview",
+            "unit": "cores",
+            "legend": "key",
+            "description": "What rightsizing compares CPU requests with: each container's 95th percentile of five-minute CPU use over the last day, from cAdvisor. Works on Prometheus and on VictoriaMetrics. Read by the overview, not drawn.",
+            "query": "label_join(quantile_over_time(0.95, sum by (namespace, pod, container) (rate(container_cpu_usage_seconds_total{container!=\"\", container!=\"POD\"}[5m]))[1d:5m]), \"key\", \"/\", \"namespace\", \"pod\", \"container\")"
+        },
+        {
+            "id": "usage-memory-peak",
+            "label": "Memory used per container (peak over a day)",
+            "attach": "overview",
+            "unit": "bytes",
+            "legend": "key",
+            "description": "What rightsizing compares memory requests and limits with: each container's highest working set over the last day, from cAdvisor. Read by the overview, not drawn.",
+            "query": "label_join(max by (namespace, pod, container) (max_over_time(container_memory_working_set_bytes{container!=\"\", container!=\"POD\"}[1d])), \"key\", \"/\", \"namespace\", \"pod\", \"container\")"
+        }
+    ]
+}

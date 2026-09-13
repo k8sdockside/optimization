@@ -1,0 +1,39 @@
+name: check
+
+# Two questions on every push:
+#
+# 1. Does the TypeScript type-check, do the tests pass, and is the committed
+#    ui/ exactly what a fresh build of src/ produces? Installing from a
+#    repository only clones it -- nothing is built -- so a src/ change whose
+#    ui/ was not rebuilt and committed would never reach anyone.
+# 2. Does the plugin load the way K8s Dockside loads it: the JSON, every
+#    field, the kinds, the queries, the icons, the links, the versions, and
+#    every page the manifest opens?
+
+on:
+    push:
+    pull_request:
+
+permissions:
+    contents: read
+
+jobs:
+    plugin:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+
+            - uses: actions/setup-node@v7
+              with:
+                  node-version: '24'
+                  cache: npm
+
+            - name: Type-check, test, and check ui/ matches a fresh build
+              run: npm ci && npm run check
+
+            - uses: actions/setup-go@v7
+              with:
+                  go-version: stable
+
+            - name: Check the plugin loads as the app loads it
+              run: go run github.com/rogerwesterbo/k8sdockside/cmd/plugincheck@main .

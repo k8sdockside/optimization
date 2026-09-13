@@ -1,0 +1,8 @@
+node_modules/
+npm-debug.log*
+.DS_Store
+coverage/
+
+# ui/ is NOT ignored on purpose: it is the build output the app serves, and
+# installing from a repository only clones it -- there is no build step on
+# install. Run `npm run build` and commit ui/ with every change to src/.
