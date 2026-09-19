@@ -1,6 +1,6 @@
 # Optimization advisor
 
-A [K8s Dockside](https://github.com/rogerwesterbo/k8sdockside) plugin that checks a
+A [K8s Dockside](https://github.com/k8sdockside/k8sdockside) plugin that checks a
 cluster against a set of plain rules, gives it a score from 0 to 100, and says what to
 change to raise it. No AI and no guesswork: every tip names the objects it is about,
 why it matters, and what to do.
@@ -17,7 +17,7 @@ It works on any cluster: it reads core kinds only, and never Secrets. Every chan
 ## Install
 
 **Settings → Plugins → Available → Optimization advisor → Install**, or install from
-`https://github.com/rogerwesterbo/k8sdockside-optimization.git`. It needs
+`https://github.com/k8sdockside/optimization.git`. It needs
 K8s Dockside 0.0.17 or later.
 
 ## Where usage comes from
@@ -123,5 +123,5 @@ npm run check      # typecheck + tests + ui/ matches a fresh build (what CI runs
 To try it in the app without publishing, copy or symlink this folder into the plugins
 folder shown under **Settings → Plugins**, or use **Settings → Plugins → From a
 folder**. The layout is the same as the
-[TypeScript example plugin](https://github.com/rogerwesterbo/k8sdockside-example-plugin-typescript):
+[TypeScript example plugin](https://github.com/k8sdockside/image-inventory):
 `src/model` is plain logic with tests, `src/ui` draws, `src/pages` are the two pages.

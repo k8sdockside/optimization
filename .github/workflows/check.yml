@@ -36,4 +36,4 @@ jobs:
                   go-version: stable
 
             - name: Check the plugin loads as the app loads it
-              run: go run github.com/rogerwesterbo/k8sdockside/cmd/plugincheck@main .
+              run: go run github.com/k8sdockside/k8sdockside/cmd/plugincheck@main .

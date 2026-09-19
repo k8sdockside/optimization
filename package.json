@@ -4,10 +4,10 @@
     "private": true,
     "description": "Optimization advisor: a K8s Dockside plugin that checks a cluster for resource, reliability, scaling and waste problems, scores it, and says what to change.",
     "license": "Apache-2.0",
-    "author": "Roger Westerbo",
+    "author": "K8s Dockside",
     "repository": {
         "type": "git",
-        "url": "https://github.com/rogerwesterbo/k8sdockside-optimization"
+        "url": "https://github.com/k8sdockside/optimization"
     },
     "type": "module",
     "engines": {
