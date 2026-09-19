@@ -21,6 +21,9 @@ import * as esbuild from 'esbuild';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PAGES = path.join(ROOT, 'src', 'pages');
 const STYLES = path.join(ROOT, 'src', 'styles');
+// Files the app or the pages load by name rather than import: the plugin's
+// own mark, above all. Optional -- a plugin with none simply has no folder.
+const ASSETS = path.join(ROOT, 'src', 'assets');
 const OUT = path.join(ROOT, 'ui');
 
 // macOS draws the pages in WKWebView (Safari's engine), Windows in WebView2
@@ -39,18 +42,31 @@ async function entryPoints() {
         .map((name) => path.join(PAGES, name));
 }
 
-/** The static files: each page's HTML, and the stylesheets. */
+/** The static files: each page's HTML, the stylesheets, and the assets. */
 async function statics() {
     const out = new Map();
     for (const [dir, ext] of [
         [PAGES, '.html'],
         [STYLES, '.css'],
+        // Whatever is in assets, whatever it is named: the manifest's `logo`
+        // may be an .svg, a .png or a .webp, and ui/ is checked against this
+        // list, so anything left out of it is reported as unexpected.
+        [ASSETS, ''],
     ]) {
-        for (const name of (await readdir(dir)).sort()) {
+        for (const name of (await names(dir)).sort()) {
             if (name.endsWith(ext)) out.set(name, await readFile(path.join(dir, name)));
         }
     }
     return out;
+}
+
+/** The files in a folder, or none when the folder is not there. */
+async function names(dir) {
+    try {
+        return await readdir(dir);
+    } catch {
+        return [];
+    }
 }
 
 async function options() {
@@ -169,13 +185,14 @@ if (mode === 'build') {
     });
     await ctx.watch();
     console.log('Watching src/ -- Ctrl+C to stop.');
-    // HTML and CSS are not part of esbuild's graph, so a change to them asks
-    // for a rebuild by hand. A new page's .ts needs a restart of the watch.
+    // HTML, CSS and the assets are not part of esbuild's graph, so a change to
+    // them asks for a rebuild by hand. A new page's .ts needs a restart of the
+    // watch, and so does a first assets folder.
     let timer = null;
-    for (const dir of [PAGES, STYLES]) {
+    for (const dir of [PAGES, STYLES, ASSETS]) {
         (async () => {
             for await (const event of watchDir(dir)) {
-                if (!/\.(html|css)$/.test(event.filename ?? '')) continue;
+                if (dir !== ASSETS && !/\.(html|css)$/.test(event.filename ?? '')) continue;
                 clearTimeout(timer);
                 timer = setTimeout(() => ctx.rebuild().catch(() => {}), 60);
             }
