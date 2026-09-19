@@ -3,9 +3,10 @@
     "id": "optimization",
     "name": "Optimization advisor",
     "version": "1.0.0",
-    "minAppVersion": "0.0.17",
+    "minAppVersion": "0.0.30",
     "tagline": "a score for this cluster, and what to change to raise it",
     "icon": "sliders",
+    "logo": "logo.svg",
     "author": "Roger Westerbo",
     "docs": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
     "links": [
