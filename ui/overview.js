@@ -1,4 +1,4 @@
-// Built by scripts/build.mjs from src/ -- edit the TypeScript there, not this file.
+// Built by k8sdockside-plugin from src/ -- edit the TypeScript there, not this file.
 "use strict";
 (() => {
   // src/model/kube.ts
