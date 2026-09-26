@@ -2,3 +2,13 @@
 # writes on any platform, and `npm run check` agrees with CI.
 * text=auto eol=lf
 ui/** text eol=lf
+# ...except images, which a text rule would mangle: the logo is copied into
+# ui/ as it is.
+*.png binary
+*.webp binary
+*.jpg binary
+*.gif binary
+*.ico binary
+
+# ui/ is build output: collapsed in GitHub diffs and left out of language stats.
+ui/** linguist-generated=true
